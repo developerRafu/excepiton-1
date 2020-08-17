@@ -42,9 +42,17 @@ public class Reservation {
        long diff = checkout.getTime() - checkin.getTime(); 
        return TimeUnit.DAYS.convert(diff,TimeUnit.MILLISECONDS);
    }
-   public void updateDates(Date checkin,Date checkout){
-       this.checkin=checkin;
-       this.checkout=checkout;
+   public String updateDates(Date checkin,Date checkout){
+      Date now = new Date();
+           if(checkout.before(now) || checkin.before(now)){
+               return "Error in reservation: Reservation dates for update must be future dates";
+           }
+           if(!checkout.before(checkin)){
+               return "Error in reservation: Check-out date must be after check-in date";
+           }
+           this.checkin=checkin;
+           this.checkout=checkout;
+           return null;
    }
 
     @Override
@@ -53,5 +61,4 @@ public class Reservation {
                 +", checkin: "+sdf.format(checkin)
                 + ", checkout:" + sdf.format(checkout);
     }
-   
 }
